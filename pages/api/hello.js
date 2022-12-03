@@ -1,5 +1,14 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import axios from "axios";
 
-export default function handler(req, res) {
-  res.status(200).json({ name: 'John Doe' })
+export default async function handler(nextReq, nextRes) {
+  axios
+    .get(
+      "https://api.unsplash.com/photos/random?client_id=j-HQOzjYOyL8NGtBumlbUJuic8zkQ2abcclsQ4Z2dyw"
+    )
+    .then((axiosResponse) => {
+      nextRes.json({ data: axiosResponse.data }).status(200);
+    })
+    .catch((axiosError) => {
+      nextRes.json({ message: axiosError.message });
+    });
 }
