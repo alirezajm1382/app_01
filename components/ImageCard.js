@@ -7,7 +7,7 @@ function ImageCard() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.image_container}>
-        <img src={data.urls.regular} />
+        <Image fill='true' src={data.urls.regular} />
       </div>
       <div className="d-flex gap-2 details_container">
         <div className="desc_container">
