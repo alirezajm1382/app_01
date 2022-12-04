@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Box, Button, Typography, Divider, Stack } from "@mui/material";
 
 function Navbar() {
@@ -24,7 +23,7 @@ function Navbar() {
           </Button>
         </Link>
         <Divider />
-        <Link href="/table" passHref legacyBehavior>
+        <Link href="/todo" passHref legacyBehavior>
           <Button href="" size="large" variant="text" color="primary">
             To-do
           </Button>
