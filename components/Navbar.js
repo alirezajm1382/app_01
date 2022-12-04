@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import { Box, Button, Typography, Divider, Stack } from "@mui/material";
 
 function Navbar() {
-  const router = useRouter();
-  let pathname = router.pathname;
   return (
     <Box p="2rem">
       <Typography variant="h3" color="initial" component="h1">
@@ -22,11 +20,11 @@ function Navbar() {
         <Divider />
         <Link href="/gallery" passHref legacyBehavior>
           <Button href="" size="large" variant="text" color="primary">
-            GAllery
+            Gallery
           </Button>
         </Link>
         <Divider />
-        <Link href="/todo" passHref legacyBehavior>
+        <Link href="/table" passHref legacyBehavior>
           <Button href="" size="large" variant="text" color="primary">
             To-do
           </Button>
