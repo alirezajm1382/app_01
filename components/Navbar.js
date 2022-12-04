@@ -1,53 +1,38 @@
-import styles from "../styles/Navbar.module.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Box, Button, Typography, Divider, Stack } from "@mui/material";
 
 function Navbar() {
   const router = useRouter();
   let pathname = router.pathname;
   return (
-    <div className={styles.navbar}>
-      <div className="d-flex flex-column align-items-start m-4">
-        <Link legacyBehavior href="/" passHref>
-          <a href="" className="list-group-item">
-            <h1 className="fw-bold ">App</h1>
-          </a>
-        </Link>
-        <p>Powered with love</p>
-      </div>
-      <ul className="d-grid gap-3">
-        <Link legacyBehavior href="/table" passHref>
-          <a
-            href=""
-            className={`list-group-item ${
-              pathname == "/table" && "fs-4 fw-bold"
-            }`}
-          >
+    <Box p="2rem">
+      <Typography variant="h3" color="initial" component="h1">
+        App
+      </Typography>
+      <Typography variant="subtitle1" color="initial">
+        Powered by Love
+      </Typography>
+      <Stack direction="column" mt="5rem" spacing={2}>
+        <Link href="/table" passHref legacyBehavior>
+          <Button href="" size="large" variant="text" color="primary">
             Table
-          </a>
+          </Button>
         </Link>
-        <Link legacyBehavior href="/gallery" passHref>
-          <a
-            href=""
-            className={`list-group-item ${
-              pathname == "/gallery" && "fs-4 fw-bold"
-            }`}
-          >
-            Gallery
-          </a>
+        <Divider />
+        <Link href="/gallery" passHref legacyBehavior>
+          <Button href="" size="large" variant="text" color="primary">
+            GAllery
+          </Button>
         </Link>
-        <Link legacyBehavior href="/todo" passHref>
-          <a
-            href=""
-            className={`list-group-item ${
-              pathname == "/todo" && "fs-4 fw-bold"
-            }`}
-          >
+        <Divider />
+        <Link href="/todo" passHref legacyBehavior>
+          <Button href="" size="large" variant="text" color="primary">
             To-do
-          </a>
+          </Button>
         </Link>
-      </ul>
-    </div>
+      </Stack>
+    </Box>
   );
 }
 
