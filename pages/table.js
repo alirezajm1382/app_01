@@ -33,8 +33,6 @@ export default function table() {
       .catch((error) => console.error(error));
   }, []);
 
-  console.log(fetchedData);
-
   const handleAddItem = (_item) => {
     setModalState(false);
     setFetchedData([...fetchedData, _item]);
@@ -57,8 +55,6 @@ export default function table() {
   const handleOnDelete = (_item) => {
     setFetchedData(fetchedData.filter((item) => item.id !== _item.id));
   };
-
-  const handleAddClose = () => setIsAddOpen(false);
 
   return (
     <div>
