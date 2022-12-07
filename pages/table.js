@@ -1,15 +1,28 @@
 import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import TableFormModal from "../components/TableFormModal";
+import { Typography, Box, Button, Stack, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@mui/material";
+import TableModal from "../components/TableModal";
 
 export default function table() {
   const [fetchedData, setFetchedData] = useState([]);
   const [modalState, setModalState] = useState(false);
   const [addState, setAddState] = useState(false);
-  const [selectedItem, setSelectedItem] = useState([]);
+  const [selectedItem, setSelectedItem] = useState({
+    id: "",
+    title: "",
+    body: "",
+    userId: "",
+  });
 
   useEffect(() => {
     axios
@@ -19,6 +32,8 @@ export default function table() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  console.log(fetchedData);
 
   const handleAddItem = (_item) => {
     setModalState(false);
@@ -43,6 +58,8 @@ export default function table() {
     setFetchedData(fetchedData.filter((item) => item.id !== _item.id));
   };
 
+  const handleAddClose = () => setIsAddOpen(false);
+
   return (
     <div>
       <Head>
@@ -50,74 +67,87 @@ export default function table() {
         <meta name="description" content="Powered by love <3" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="mt-5 me-3">
-        <div className="d-flex align-items-center justify-content-between">
-          <h2>Table</h2>
+      <Box mt={5} mr={3}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }} mb={2}>
+          <Typography variant="h4" color="initial" component="h2">
+            Table
+          </Typography>
           <Button
-            variant="primary"
+            variant="outlined"
+            color="primary"
             onClick={() => {
-              setModalState(true);
               setAddState(true);
+              setSelectedItem({ id: "", title: "", body: "", userId: "" });
+              setModalState(true);
+            }}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(33, 112, 181, 0.2)",
+              },
             }}
           >
             Add Item
           </Button>
-        </div>
+        </Box>
         <hr />
-
-        <div className="m-2">
-          <Table hover>
-            <thead>
-              <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Body</th>
-                <th scope="col">#</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {fetchedData.map((item) => {
+        <Box mt={2}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ width: 90 }}>User ID</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Body</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {fetchedData.map((row) => {
                 return (
-                  <tr key={item.id}>
-                    <td>{item.title}</td>
-                    <td>{item.body}</td>
-                    <td>{item.userId}</td>
-                    <td>
-                      <div className="d-flex flex-column gap-2">
-                        <Button
-                          variant="outline-dark"
+                  <TableRow key={row.id}>
+                    <TableCell>{row.userId}</TableCell>
+                    <TableCell>{row.title}</TableCell>
+                    <TableCell>{row.body}</TableCell>
+                    <TableCell>
+                      <Stack direction="column" spacing={1}>
+                        <IconButton
+                          aria-label="delete"
+                          sx={{
+                            color: "rgba(189, 89, 89, 0.9)",
+                            "&:hover": {
+                              backgroundColor: "rgba(189, 89, 89, 0.2)",
+                            },
+                          }}
+                          onClick={() => handleOnDelete(row)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="edit"
                           onClick={() => {
-                            setSelectedItem(item);
                             setAddState(false);
+                            setSelectedItem(row);
                             setModalState(true);
                           }}
                         >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outline-danger"
-                          onClick={() => handleOnDelete(item)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
+                          <EditIcon />
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
+            </TableBody>
           </Table>
-        </div>
-      </div>
-      {modalState && (
-        <TableFormModal
-          setModalState={setModalState}
-          addState={addState}
-          handleAddItem={handleAddItem}
-          handleUpdateItem={handleUpdateItem}
-          selectedItem={selectedItem}
-        />
-      )}
+        </Box>
+      </Box>
+      <TableModal
+        modalState={modalState}
+        setModalState={setModalState}
+        addState={addState}
+        handleAddItem={handleAddItem}
+        handleUpdateItem={handleUpdateItem}
+        selectedItem={selectedItem}
+      />
     </div>
   );
 }
