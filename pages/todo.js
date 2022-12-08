@@ -1,75 +1,24 @@
 import Head from "next/head";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import FloatingLabel from "react-bootstrap/FloatingLabel";
-import Form from "react-bootstrap/form";
-import { useRef, useState } from "react";
+import { Button, Typography, Box, Grid } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
+import { useState } from "react";
 import TodoCard from "../components/TodoCard";
 import { nanoid } from "nanoid";
 
 function TodoPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [details, setDetails] = useState("");
   const [todoList, setTodoList] = useState([]);
-  const titleRef = useRef(null);
-  const detailsRef = useRef(null);
+
   const handleModalClose = () => setIsOpen(false);
-  const handleModal = () => {
-    return (
-      <Modal show={true} backdrop="static" onHide={handleModalClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Add To-do Item</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <FloatingLabel
-            controlId="floatingTitle"
-            label="Title"
-            className="mb-3"
-          >
-            <Form.Control
-              type="text"
-              placeholder="Title"
-              ref={titleRef}
-              autoComplete="off"
-            />
-          </FloatingLabel>
-          <FloatingLabel
-            controlId="floatingDetails"
-            label="Details"
-            className="mb-3"
-          >
-            <Form.Control
-              as="textarea"
-              placeholder="Details"
-              style={{ height: "200px" }}
-              ref={detailsRef}
-            />
-          </FloatingLabel>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline-danger" onClick={() => handleModalClose()}>
-            Cancel
-          </Button>
-          <Button
-            variant="success"
-            onClick={() => {
-              setTodoList([
-                ...todoList,
-                {
-                  id: nanoid(),
-                  title: titleRef.current.value,
-                  details: detailsRef.current.value,
-                  isCompleted: 0,
-                },
-              ]);
-              setIsOpen(false);
-            }}
-          >
-            Save
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  };
+
   const handleChange = (_item) => {
     let index = -1;
     let temp = todoList.filter((f) => {
@@ -82,31 +31,110 @@ function TodoPage() {
       ...todoList.slice(index + 1),
     ]);
   };
+
   return (
     <div>
       <Head>
         <title>App / To-do</title>
         <meta httpEquiv="Content-Type" content="text/html;charset=UTF-8" />
       </Head>
-      <div className="mt-5 me-3">
-        <div className="d-flex justify-content-between align-items-center">
-          <h2>Todo</h2>
-          <Button variant="primary" onClick={() => setIsOpen(true)}>
-            Add an Item
+      <Box mt={5} mr={3}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }} mb={2}>
+          <Typography variant="h4" color="initial" component="h2">
+            To-do
+          </Typography>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(33, 112, 181, 0.2)",
+              },
+            }}
+          >
+            Add To-do
           </Button>
-        </div>
+        </Box>
         <hr />
-        <div className="todo_grid">
-          {todoList.length !== 0 ? (
-            todoList.map((todoListItem) => {
-              return <TodoCard key={todoListItem.id} item={todoListItem} handleChange={handleChange} />;
-            })
-          ) : (
-            <h4>No To-dos. Hooray. You're way ahead for today!</h4>
-          )}
-        </div>
-        {isOpen && handleModal()}
-      </div>
+        {todoList.length !== 0 ? (
+          <Grid container spacing={3} mt>
+            {todoList.map((todoListItem) => {
+              return (
+                <Grid item xs={4}>
+                  <TodoCard
+                    key={todoListItem.id}
+                    item={todoListItem}
+                    handleChange={handleChange}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
+        ) : (
+          <h4>No To-dos. Hooray. You're way ahead for today!</h4>
+        )}
+      </Box>
+      <Dialog open={isOpen} onClose={handleModalClose}>
+        <DialogTitle>Add To-do Item</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            margin="dense"
+            variant="standard"
+            label="Title"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            margin="dense"
+            variant="standard"
+            label="Details"
+            multiline
+            rows={3}
+            onChange={(e) => setDetails(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleModalClose}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(189, 89, 89, 0.2)",
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="outlined"
+            color="success"
+            onClick={() => {
+              setTodoList([
+                ...todoList,
+                {
+                  id: nanoid(),
+                  title: title,
+                  details: details,
+                  isCompleted: 0,
+                },
+              ]);
+              setIsOpen(false);
+            }}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(53, 181, 32, 0.2)",
+              },
+            }}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
