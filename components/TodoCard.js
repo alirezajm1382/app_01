@@ -1,36 +1,52 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardActions } from im
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Checkbox,
+  Stack,
+} from "@mui/material";
 import styles from "../styles/TodoCard.module.css";
 import Form from "react-bootstrap/Form";
 
 function TodoCard({ item, handleChange }) {
   const [isCompleted, setisCompleted] = useState(false);
+  let style = "";
   useEffect(() => {
     handleChange({ ...item, isCompleted: !item.isCompleted });
   }, [isCompleted]);
+
   return (
-    <div className={isCompleted ? styles.color1 : styles.color2}>
-      <div className="d-flex flex-column justify-content-between h-100">
-        <div>
-          <h5 className={isCompleted ? styles.text2 : ``}>{item.title}</h5>
-          <p className={isCompleted ? styles.text2 : ``}>{item.details}</p>
-        </div>
-        <div className="d-flex justify-content-end gap-2 align-item-end">
-          <p className={styles.statusText}>
-            <strong>Status</strong>
-          </p>
-          <Form.Check
-            type="checkbox"
-            id="todo_isCompleted"
-            name="todo_isCompleted"
+    <Card className={isCompleted ? styles.color1 : styles.color2}>
+      <CardContent>
+        <Typography variant="h5" component="h6">
+          {item.title}
+        </Typography>
+        <Typography variant="body1" component="p">
+          {item.details}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Stack
+          direction="row"
+          sx={{ width: "100%", justifyContent: "flex-end" }}
+        >
+          <Checkbox
+            sx={{
+              color: 'rgba(0,0,0,1)',
+              "&.Mui-checked": {
+                color: 'rgba(0,0,0,1)',
+              },
+            }}
             onChange={() => {
               if (isCompleted) setisCompleted(false);
               else setisCompleted(true);
             }}
           />
-        </div>
-      </div>
-    </div>
+        </Stack>
+      </CardActions>
+    </Card>
   );
 }
 
