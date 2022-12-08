@@ -22,9 +22,6 @@ export default function TableModal({
   const [uid, setUid] = useState(selectedItem.userId);
   const [title, setTitle] = useState(selectedItem.title);
   const [body, setBody] = useState(selectedItem.body);
-  const onChangeUid = (event) => setUid(event.target.value);
-  const onChangeTitle = (event) => setTitle(event.target.value);
-  const onChangeBody = (event) => setBody(event.target.value);
   useEffect(() => {
     if(modalState) {
       setUid(selectedItem.userId);
@@ -36,8 +33,6 @@ export default function TableModal({
     <Dialog
       open={modalState}
       onClose={handleClose}
-      aria-labelledby="modal-title"
-      aria-describedby="modal-title"
     >
       <DialogTitle>{addState ? `Add` : `Edit`} Item</DialogTitle>
       <DialogContent>
