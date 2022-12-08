@@ -74,7 +74,8 @@ function TodoPage() {
             })}
           </Grid>
         ) : (
-          <h4>No To-dos. Hooray. You're way ahead for today!</h4>
+          <Typography variant="h6" component="h4" m={2}>No To-dos. Hooray!</Typography>
+          
         )}
       </Box>
       <Dialog open={isOpen} onClose={handleModalClose}>

@@ -7,11 +7,3 @@
   background-color: rgba(40, 255, 40, 0.6);
   transition: .5s;
 }
-
-.text2 { 
-  text-decoration: line-through;
-}
-
-.statusText {
-  margin-bottom: 0!important;
-}
