@@ -98,7 +98,7 @@ function TodoPage() {
         <hr />
         <div className="todo_grid">
           {todoList.length !== 0 ? (
-            todoList.sort((a,b) => b.isCompleted - a.isCompleted ).map((todoListItem) => {
+            todoList.map((todoListItem) => {
               return <TodoCard key={todoListItem.id} item={todoListItem} handleChange={handleChange} />;
             })
           ) : (
