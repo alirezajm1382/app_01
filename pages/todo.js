@@ -13,13 +13,18 @@ import { nanoid } from "nanoid";
 
 function TodoPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("");
+  const [onDelete, setOnDelete] = useState(false);
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [id, setId] = useState("");
   const [todoList, setTodoList] = useState([]);
 
   const handleModalClose = () => setIsOpen(false);
+
+  const handleOnDelete = (_item) => {
+    setOnDelete(true);
+    setTodoList(todoList.filter((item) => item.id !== _item.id));
+  };
 
   const handleChange = (_item) => {
     let index = -1;
@@ -46,6 +51,15 @@ function TodoPage() {
     }
   };
 
+  useEffect(() => {
+    if (todoList.length !== 0 || onDelete === true)
+      localStorage.setItem("list", JSON.stringify(todoList));
+  }, [todoList]);
+
+  useEffect(() => {
+    setTodoList(JSON.parse(localStorage.getItem("list")));
+  }, []);
+
   return (
     <div>
       <Head>
@@ -61,9 +75,9 @@ function TodoPage() {
             variant="outlined"
             color="primary"
             onClick={() => {
-              setTitle("")
-              setDetails("")
-              setId("")
+              setTitle("");
+              setDetails("");
+              setId("");
               setIsOpen(true);
             }}
             sx={{
@@ -84,6 +98,7 @@ function TodoPage() {
                   <TodoCard
                     item={todoListItem}
                     handleChange={handleChange}
+                    handleOnDelete={handleOnDelete}
                     setTitle={setTitle}
                     setDetails={setDetails}
                     setId={setId}

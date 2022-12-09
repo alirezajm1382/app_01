@@ -9,11 +9,13 @@ import {
   Stack,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "../styles/TodoCard.module.css";
 
 function TodoCard({
   item,
   handleChange,
+  handleOnDelete,
   setTitle,
   setId,
   setDetails,
@@ -61,6 +63,9 @@ function TodoCard({
             }}
           >
             <EditIcon />
+          </IconButton>
+          <IconButton sx={{ color: "black" }} onClick={() => handleOnDelete(item)}>
+            <DeleteIcon />
           </IconButton>
         </Stack>
       </CardActions>
