@@ -1,5 +1,4 @@
 import Head from "next/head";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Typography, Box, Button, Stack, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -13,7 +12,7 @@ import {
 } from "@mui/material";
 import TableModal from "../components/TableModal";
 
-export default function table() {
+export default function table({ table }) {
   const [fetchedData, setFetchedData] = useState([]);
   const [modalState, setModalState] = useState(false);
   const [addState, setAddState] = useState(false);
@@ -25,12 +24,7 @@ export default function table() {
   });
 
   useEffect(() => {
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => {
-        setFetchedData(response.data);
-      })
-      .catch((error) => console.error(error));
+    setFetchedData(table);
   }, []);
 
   const handleAddItem = (_item) => {
@@ -146,4 +140,14 @@ export default function table() {
       />
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const data = await res.json();
+  return {
+    props: {
+      table: data,
+    },
+  };
 }
