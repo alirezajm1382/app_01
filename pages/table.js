@@ -9,11 +9,15 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  TablePagination,
 } from "@mui/material";
 import TableModal from "../components/TableModal";
 
 export default function table({ table }) {
   const [fetchedData, setFetchedData] = useState([]);
+  const [count, setCount] = useState(0);
+  const [tablePage, setTablePage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [modalState, setModalState] = useState(false);
   const [addState, setAddState] = useState(false);
   const [selectedItem, setSelectedItem] = useState({
@@ -27,9 +31,21 @@ export default function table({ table }) {
     setFetchedData(table);
   }, []);
 
+  useEffect(() => {
+    setCount(+fetchedData.length);
+  }, [fetchedData]);
+
+  const handleChangePage = (event, newPage) => setTablePage(newPage);
+
+  const handleChangeRowsPerPage = (event) => {
+    setTablePage(0);
+    setRowsPerPage(parseInt(event.target.value, 10));
+  };
+
   const handleAddItem = (_item) => {
     setModalState(false);
     setFetchedData([...fetchedData, _item]);
+    setTablePage(+(count / rowsPerPage));
   };
 
   const handleUpdateItem = (_item) => {
@@ -48,6 +64,7 @@ export default function table({ table }) {
 
   const handleOnDelete = (_item) => {
     setFetchedData(fetchedData.filter((item) => item.id !== _item.id));
+    if ((count - 1) % rowsPerPage == 0) setTablePage(tablePage - 1);
   };
 
   return (
@@ -91,43 +108,58 @@ export default function table({ table }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {fetchedData.map((row) => {
-                return (
-                  <TableRow key={row.id}>
-                    <TableCell>{row.userId}</TableCell>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.body}</TableCell>
-                    <TableCell>
-                      <Stack direction="column" spacing={1}>
-                        <IconButton
-                          aria-label="delete"
-                          sx={{
-                            color: "rgba(189, 89, 89, 0.9)",
-                            "&:hover": {
-                              backgroundColor: "rgba(189, 89, 89, 0.2)",
-                            },
-                          }}
-                          onClick={() => handleOnDelete(row)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                        <IconButton
-                          aria-label="edit"
-                          onClick={() => {
-                            setAddState(false);
-                            setSelectedItem(row);
-                            setModalState(true);
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {fetchedData
+                .slice(
+                  tablePage * rowsPerPage,
+                  tablePage * rowsPerPage + rowsPerPage
+                )
+                .map((row) => {
+                  return (
+                    <TableRow key={row.id}>
+                      <TableCell>{row.userId}</TableCell>
+                      <TableCell>{row.title}</TableCell>
+                      <TableCell>{row.body}</TableCell>
+                      <TableCell>
+                        <Stack direction="column" spacing={1}>
+                          <IconButton
+                            aria-label="delete"
+                            sx={{
+                              color: "rgba(189, 89, 89, 0.9)",
+                              "&:hover": {
+                                backgroundColor: "rgba(189, 89, 89, 0.2)",
+                              },
+                            }}
+                            onClick={() => handleOnDelete(row)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                          <IconButton
+                            aria-label="edit"
+                            onClick={() => {
+                              setAddState(false);
+                              setSelectedItem(row);
+                              setModalState(true);
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
+
+          <TablePagination
+            component="div"
+            count={count}
+            rowsPerPageOptions={[10, 20]}
+            rowsPerPage={rowsPerPage}
+            page={tablePage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </Box>
       </Box>
       <TableModal
