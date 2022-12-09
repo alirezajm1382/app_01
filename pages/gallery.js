@@ -1,6 +1,13 @@
 import Head from "next/head";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import {
+  IconButton,
+  Typography,
+  Box,
+  Stack,
+  TextField,
+  Grid,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import ImageCard from "../components/ImageCard";
 
 function GalleryPage() {
@@ -11,22 +18,42 @@ function GalleryPage() {
         <meta name="description" content="Powered by Love <3" />
         <meta httpEquiv="X-UA-Compatible" content="IE=7" />
       </Head>
-      <div className="mt-5 me-3">
-        <div className="d-flex align-items-center justify-content-between">
-          <h2>Gallery</h2>
-          <div className="d-flex gap-2">
-            <Form.Control type="text" placeholder="Search Query" />
-            <Button variant="warning">Fire</Button>
-          </div>
-        </div>
+      <Box mt={5} mr={3}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+          mb={2}
+        >
+          <Typography variant="h4" color="initial" component="h2">
+            Gallery
+          </Typography>
+          <Stack direction="row" spacing={1}>
+            <TextField
+              placeholder="Search Query"
+              sx={{ minWidth: "100px" }}
+              variant="standard"
+            />
+            <IconButton color="primary" onClick={() => {}}>
+              <SearchIcon />
+            </IconButton>
+          </Stack>
+        </Box>
         <hr />
-        <div className="m-2 d-grid gap-3">
-          <div className="row row-cols-2">
+        <Grid container mt={2} spacing={1}>
+          <Grid item xs="4">
             <ImageCard />
+          </Grid>
+          <Grid item xs="4">
             <ImageCard />
-          </div>
-        </div>
-      </div>
+          </Grid>
+          <Grid item xs="4">
+            <ImageCard />
+          </Grid>
+        </Grid>
+      </Box>
     </div>
   );
 }

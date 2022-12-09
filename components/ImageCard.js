@@ -1,27 +1,31 @@
 import Image from "next/image";
 import MockImage from "../data";
-import styles from "../styles/ImageCard.module.css";
+import { Card, CardMedia, CardContent, Typography, Link } from "@mui/material";
 
 function ImageCard() {
   const data = MockImage();
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.image_container}>
-        <Image fill='true' src={data.urls.regular} />
-      </div>
-      <div className="d-flex gap-2 details_container">
-        <div className="desc_container">
-          <h5>Title</h5>
-          <p>Desc</p>
-        </div>
-        <div className="profile_container">
-          <p>Profile</p>
-          <div className={styles.profile_image_container}>
-            <Image src={data.user.profile_image} />
+    <Card sx={{ position: "relative" }}>
+      <Link href={data.links.html}>
+        <CardMedia height="200" component="div">
+          <div style={{ position: "relative", width: "100%", height: "200px" }}>
+            <Image
+              src={data.urls.small_s3}
+              fill
+              style={{ objectFit: "cover" }}
+            />
           </div>
-        </div>
-      </div>
-    </div>
+        </CardMedia>
+      </Link>
+      <CardContent>
+        <Typography variant="body1" component="p">
+          by{" "}
+          <Link sx={{ textDecoration: "none" }} href={data.user.links.html}>
+            {data.user.name}
+          </Link>
+        </Typography>
+      </CardContent>
+    </Card>
   );
 }
 
