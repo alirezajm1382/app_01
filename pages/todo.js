@@ -61,7 +61,9 @@ function TodoPage() {
             variant="outlined"
             color="primary"
             onClick={() => {
-              setSelectedItem({});
+              setTitle("")
+              setDetails("")
+              setId("")
               setIsOpen(true);
             }}
             sx={{
