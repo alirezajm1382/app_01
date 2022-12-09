@@ -5,14 +5,21 @@ import {
   CardActions,
   Typography,
   Checkbox,
+  IconButton,
   Stack,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import styles from "../styles/TodoCard.module.css";
-import Form from "react-bootstrap/Form";
 
-function TodoCard({ item, handleChange }) {
+function TodoCard({
+  item,
+  handleChange,
+  setTitle,
+  setId,
+  setDetails,
+  setIsOpen,
+}) {
   const [isCompleted, setisCompleted] = useState(false);
-  let style = "";
   useEffect(() => {
     handleChange({ ...item, isCompleted: !item.isCompleted });
   }, [isCompleted]);
@@ -34,9 +41,9 @@ function TodoCard({ item, handleChange }) {
         >
           <Checkbox
             sx={{
-              color: 'rgba(0,0,0,1)',
+              color: "rgba(0,0,0,1)",
               "&.Mui-checked": {
-                color: 'rgba(0,0,0,1)',
+                color: "rgba(0,0,0,1)",
               },
             }}
             onChange={() => {
@@ -44,6 +51,17 @@ function TodoCard({ item, handleChange }) {
               else setisCompleted(true);
             }}
           />
+          <IconButton
+            sx={{ color: "black " }}
+            onClick={() => {
+              setTitle(item.title);
+              setDetails(item.details);
+              setId(item.id);
+              setIsOpen(true);
+            }}
+          >
+            <EditIcon />
+          </IconButton>
         </Stack>
       </CardActions>
     </Card>

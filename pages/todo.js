@@ -7,14 +7,16 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TodoCard from "../components/TodoCard";
 import { nanoid } from "nanoid";
 
 function TodoPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState("");
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
+  const [id, setId] = useState("");
   const [todoList, setTodoList] = useState([]);
 
   const handleModalClose = () => setIsOpen(false);
@@ -25,11 +27,23 @@ function TodoPage() {
       return f.id === _item.id;
     });
     index = todoList.indexOf(temp[0]);
-    setTodoList([
-      ...todoList.slice(0, index),
-      _item,
-      ...todoList.slice(index + 1),
-    ]);
+    if (_item.id !== "") {
+      setTodoList([
+        ...todoList.slice(0, index),
+        _item,
+        ...todoList.slice(index + 1),
+      ]);
+    } else {
+      setTodoList([
+        ...todoList,
+        {
+          id: nanoid(),
+          title: title,
+          details: details,
+          isCompleted: 0,
+        },
+      ]);
+    }
   };
 
   return (
@@ -47,6 +61,7 @@ function TodoPage() {
             variant="outlined"
             color="primary"
             onClick={() => {
+              setSelectedItem({});
               setIsOpen(true);
             }}
             sx={{
@@ -63,29 +78,34 @@ function TodoPage() {
           <Grid container spacing={3} mt>
             {todoList.map((todoListItem) => {
               return (
-                <Grid item xs={4}>
+                <Grid item xs={4} key={todoListItem.id}>
                   <TodoCard
-                    key={todoListItem.id}
                     item={todoListItem}
                     handleChange={handleChange}
+                    setTitle={setTitle}
+                    setDetails={setDetails}
+                    setId={setId}
+                    setIsOpen={setIsOpen}
                   />
                 </Grid>
               );
             })}
           </Grid>
         ) : (
-          <Typography variant="h6" component="h4" m={2}>No To-dos. Hooray!</Typography>
-          
+          <Typography variant="h6" component="h4" m={2}>
+            No To-dos. Hooray!
+          </Typography>
         )}
       </Box>
       <Dialog open={isOpen} onClose={handleModalClose}>
-        <DialogTitle>Add To-do Item</DialogTitle>
+        <DialogTitle>{id === "" ? `Add` : `Edit`} To-do Item</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
             margin="dense"
             variant="standard"
             label="Title"
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <TextField
@@ -95,6 +115,7 @@ function TodoPage() {
             label="Details"
             multiline
             rows={3}
+            value={details}
             onChange={(e) => setDetails(e.target.value)}
           />
         </DialogContent>
@@ -115,15 +136,11 @@ function TodoPage() {
             variant="outlined"
             color="success"
             onClick={() => {
-              setTodoList([
-                ...todoList,
-                {
-                  id: nanoid(),
-                  title: title,
-                  details: details,
-                  isCompleted: 0,
-                },
-              ]);
+              handleChange({
+                title: title,
+                details: details,
+                id: id,
+              });
               setIsOpen(false);
             }}
             sx={{
