@@ -6,7 +6,7 @@ function ImageCard() {
   const data = MockImage();
   return (
     <Card sx={{ position: "relative" }}>
-      <Link href={data.links.html}>
+      <Link href={data.links.html} target="_blank">
         <CardMedia height="200" component="div">
           <div style={{ position: "relative", width: "100%", height: "200px" }}>
             <Image
@@ -20,7 +20,7 @@ function ImageCard() {
       <CardContent>
         <Typography variant="body1" component="p">
           by{" "}
-          <Link sx={{ textDecoration: "none" }} href={data.user.links.html}>
+          <Link sx={{ textDecoration: "none" }} href={data.user.links.html} target="_blank">
             {data.user.name}
           </Link>
         </Typography>
