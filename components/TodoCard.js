@@ -21,10 +21,10 @@ function TodoCard({
   setDetails,
   setIsOpen,
 }) {
-  const [isCompleted, setisCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
   useEffect(() => {
-    handleChange({ ...item, isCompleted: !item.isCompleted });
-  }, [isCompleted]);
+    setIsCompleted(item.isCompleted);
+  }, []);
 
   return (
     <Card className={isCompleted ? styles.color1 : styles.color2}>
@@ -42,15 +42,17 @@ function TodoCard({
           sx={{ width: "100%", justifyContent: "flex-end" }}
         >
           <Checkbox
+            checked={isCompleted}
             sx={{
               color: "rgba(0,0,0,1)",
               "&.Mui-checked": {
                 color: "rgba(0,0,0,1)",
               },
             }}
+            inputProps={{ "aria-label": "controlled" }}
             onChange={() => {
-              if (isCompleted) setisCompleted(false);
-              else setisCompleted(true);
+              setIsCompleted(!isCompleted);
+              handleChange({ ...item, isCompleted: !item.isCompleted });
             }}
           />
           <IconButton
@@ -64,7 +66,10 @@ function TodoCard({
           >
             <EditIcon />
           </IconButton>
-          <IconButton sx={{ color: "black" }} onClick={() => handleOnDelete(item)}>
+          <IconButton
+            sx={{ color: "black" }}
+            onClick={() => handleOnDelete(item)}
+          >
             <DeleteIcon />
           </IconButton>
         </Stack>

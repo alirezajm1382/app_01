@@ -6,10 +6,35 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import TodoCard from "../components/TodoCard";
 import { nanoid } from "nanoid";
+import PropTypes from "prop-types";
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
 function TodoPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +43,7 @@ function TodoPage() {
   const [details, setDetails] = useState("");
   const [id, setId] = useState("");
   const [todoList, setTodoList] = useState([]);
+  const [tabValue, setTabValue] = useState(0);
 
   const handleModalClose = () => setIsOpen(false);
 
@@ -45,10 +71,21 @@ function TodoPage() {
           id: nanoid(),
           title: title,
           details: details,
-          isCompleted: 0,
+          isCompleted: false,
         },
       ]);
     }
+  };
+
+  const tabProps = (index) => {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
   };
 
   useEffect(() => {
@@ -91,23 +128,59 @@ function TodoPage() {
         </Box>
         <hr />
         {todoList.length !== 0 ? (
-          <Grid container spacing={3} mt>
-            {todoList.map((todoListItem) => {
-              return (
-                <Grid item xs={4} key={todoListItem.id}>
-                  <TodoCard
-                    item={todoListItem}
-                    handleChange={handleChange}
-                    handleOnDelete={handleOnDelete}
-                    setTitle={setTitle}
-                    setDetails={setDetails}
-                    setId={setId}
-                    setIsOpen={setIsOpen}
-                  />
-                </Grid>
-              );
-            })}
-          </Grid>
+          <Box mt>
+            <Tabs
+              variant="fullWidth"
+              value={tabValue}
+              onChange={handleTabChange}
+            >
+              <Tab label="To-do" {...tabProps(0)} />
+              <Tab label="Done" {...tabProps(1)} />
+            </Tabs>
+            <TabPanel value={tabValue} index={0}>
+              <Grid container spacing={3}>
+                {todoList.map((todoListItem) => {
+                  if (!todoListItem.isCompleted) {
+                    return (
+                      <Grid item xs={4} key={todoListItem.id}>
+                        <TodoCard
+                          key={todoListItem.id}
+                          item={todoListItem}
+                          handleChange={handleChange}
+                          handleOnDelete={handleOnDelete}
+                          setTitle={setTitle}
+                          setDetails={setDetails}
+                          setId={setId}
+                          setIsOpen={setIsOpen}
+                        />
+                      </Grid>
+                    );
+                  }
+                })}
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={1}>
+              <Grid container spacing={3}>
+                {todoList.map((todoListItem) => {
+                  if (todoListItem.isCompleted) {
+                    return (
+                      <Grid item xs={4} key={todoListItem.id}>
+                        <TodoCard
+                          item={todoListItem}
+                          handleChange={handleChange}
+                          handleOnDelete={handleOnDelete}
+                          setTitle={setTitle}
+                          setDetails={setDetails}
+                          setId={setId}
+                          setIsOpen={setIsOpen}
+                        />
+                      </Grid>
+                    );
+                  }
+                })}
+              </Grid>
+            </TabPanel>
+          </Box>
         ) : (
           <Typography variant="h6" component="h4" m={2}>
             No To-dos. Hooray!
