@@ -6,6 +6,7 @@ import {
   Stack,
   TextField,
   Grid,
+  Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ImageCard from "../components/ImageCard";
@@ -18,7 +19,7 @@ function GalleryPage() {
   const [images, setImages] = useState([]);
   useEffect(() => {
     if (query !== "") {
-      let url = `https://api.unsplash.com/search/photos?per_page=12&page=1&query=${query}&client_id=j-HQOzjYOyL8NGtBumlbUJuic8zkQ2abcclsQ4Z2dyw`;
+      let url = `https://api.unsplash.com/search/photos?per_page=15&page=1&query=${query}&client_id=j-HQOzjYOyL8NGtBumlbUJuic8zkQ2abcclsQ4Z2dyw`;
       console.log(url);
       axios
         .get(url)
@@ -64,14 +65,15 @@ function GalleryPage() {
           </Stack>
         </Box>
         <hr />
-        <Grid container mt={2} spacing={1}>
-          {images &&
-            images.map((data) => (
+        {images && (
+          <Grid container mt={2} spacing={1}>
+            {images.map((data) => (
               <Grid item xs={4} key={data.id}>
                 <ImageCard data={data} />
               </Grid>
             ))}
-        </Grid>
+          </Grid>
+        )}
       </Box>
     </div>
   );
