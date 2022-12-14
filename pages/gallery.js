@@ -9,8 +9,29 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ImageCard from "../components/ImageCard";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function GalleryPage() {
+  const [query, setQuery] = useState("");
+  const [fire, setFire] = useState(false);
+  const [images, setImages] = useState([]);
+  useEffect(() => {
+    if (query !== "") {
+      let url = `https://api.unsplash.com/search/photos?per_page=12&page=1&query=${query}&client_id=j-HQOzjYOyL8NGtBumlbUJuic8zkQ2abcclsQ4Z2dyw`;
+      console.log(url);
+      axios
+        .get(url)
+        .then((response) => {
+          setImages(response.data.results);
+        })
+        .catch((err) => console.error(err))
+        .finally(() => {
+          setFire(false);
+          console.log(images);
+        });
+    }
+  }, [fire]);
   return (
     <div>
       <Head>
@@ -35,23 +56,21 @@ function GalleryPage() {
               placeholder="Search Query"
               sx={{ minWidth: "100px" }}
               variant="standard"
+              onChange={(event) => setQuery(event.target.value)}
             />
-            <IconButton color="primary" onClick={() => {}}>
+            <IconButton color="primary" onClick={() => setFire(true)}>
               <SearchIcon />
             </IconButton>
           </Stack>
         </Box>
         <hr />
         <Grid container mt={2} spacing={1}>
-          <Grid item xs="4">
-            <ImageCard />
-          </Grid>
-          <Grid item xs="4">
-            <ImageCard />
-          </Grid>
-          <Grid item xs="4">
-            <ImageCard />
-          </Grid>
+          {images &&
+            images.map((data) => (
+              <Grid item xs={4} key={data.id}>
+                <ImageCard data={data} />
+              </Grid>
+            ))}
         </Grid>
       </Box>
     </div>
