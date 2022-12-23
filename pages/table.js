@@ -35,6 +35,7 @@ export default function table({ table }) {
     setCount(+fetchedData.length);
   }, [fetchedData]);
 
+
   const handleChangePage = (event, newPage) => setTablePage(newPage);
 
   const handleChangeRowsPerPage = (event) => {

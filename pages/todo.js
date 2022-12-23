@@ -97,6 +97,7 @@ function TodoPage() {
     setTodoList(JSON.parse(localStorage.getItem("list")));
   }, []);
 
+
   return (
     <div>
       <Head>
@@ -106,7 +107,7 @@ function TodoPage() {
       <Box mt={5} mr={3}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }} mb={2}>
           <Typography variant="h4" color="initial" component="h2">
-            To-do
+            localStorage To-do
           </Typography>
           <Button
             variant="outlined"
