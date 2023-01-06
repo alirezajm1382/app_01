@@ -68,10 +68,10 @@ function TodoPage() {
       setTodoList([
         ...todoList,
         {
-          id: nanoid(),
           title: title,
           details: details,
           isCompleted: false,
+          id: nanoid(),
         },
       ]);
     }
@@ -96,7 +96,6 @@ function TodoPage() {
   useEffect(() => {
     setTodoList(JSON.parse(localStorage.getItem("list")));
   }, []);
-
 
   return (
     <div>
