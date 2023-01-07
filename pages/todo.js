@@ -89,8 +89,10 @@ function TodoPage() {
   };
 
   useEffect(() => {
-    if (todoList.length !== 0 || onDelete === true)
+    if (onDelete === true || !localStorage.getItem("list")) {
       localStorage.setItem("list", JSON.stringify(todoList));
+      setOnDelete(false);
+    }
   }, [todoList]);
 
   useEffect(() => {
